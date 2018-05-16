@@ -1,0 +1,153 @@
+package com.example.sauli.courseprojectsauli;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivitySauli extends AppCompatActivity {
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_sauli);
+
+        // Setting listener for button which opens popup menu for gender selection. after that toast message will be shown to user
+        final Button genderButton = (Button) findViewById(R.id.genderButton);
+        genderButton.setOnClickListener(new View.OnClickListener() {
+
+            // created popup menu for gender selection and selected gender will be displayed for user
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(MainActivitySauli.this, genderButton);
+                popup.getMenuInflater().inflate(R.menu.menusauli, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(
+                                MainActivitySauli.this,
+                                "sex : " + item.getTitle(),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        return true;
+                    }
+                });
+
+                popup.show();
+            }
+        });
+
+
+        // creating reset button which resets all selections
+        final Button resetButton = (Button) findViewById(R.id.resetButton);
+        resetButton.setOnLongClickListener(new View.OnLongClickListener() {
+
+
+            public boolean onLongClick(View v) {
+
+                ImageView img = (ImageView) findViewById(R.id.imageView);
+                EditText age = (EditText) findViewById(R.id.age);
+                TextView result = (TextView) findViewById(R.id.result);
+
+
+                img.setImageResource(R.drawable.blank);
+                age.setText("");
+                result.setText("");
+
+
+                Toast.makeText(MainActivitySauli.this, "cleared!", Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
+        //if the reset button is pressed quickly app gives this toast message for user (does not reset on quick button click only if you hold the reset button)
+        resetButton.setOnClickListener(new View.OnClickListener() {
+
+
+            public void onClick(View v) {
+
+
+                Toast.makeText(MainActivitySauli.this, "hold the button to reset", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
+        //creating button which with user can choose desired type of exercise
+        final Button excButton = (Button) findViewById(R.id.exrButton);
+        excButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                PopupMenu popup1 = new PopupMenu(MainActivitySauli.this, excButton);
+                popup1.getMenuInflater().inflate(R.menu.excmenusauli, popup1.getMenu());
+
+                final ImageView img = (ImageView) findViewById(R.id.imageView);
+                final EditText age = (EditText) findViewById(R.id.age);
+                final TextView result = (TextView) findViewById(R.id.result);
+
+                // had to make check for age section to prevent software from crashing
+                if (age.getText().length() > 0) {
+                    popup1.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                        public boolean onMenuItemClick(MenuItem item) {
+
+                            // base calculation for heartrate and age included also making variables for min and max heartrate
+                            if (Integer.parseInt(age.getText().toString()) >= 1 && Integer.parseInt(age.getText().toString()) <= 120) {
+
+                                String ages = age.getText().toString();
+                                int heartrate = 219 - Integer.parseInt(ages);
+                                int minheartrate = 0;
+                                int maxheartrate = 0;
+
+                                // making case for aerobic,anaerobic and vo2 also calculating desired heartrates (min max) and displaying them for user
+                                switch (item.getItemId()) {
+                                    case R.id.aerobic:
+
+                                        img.setImageResource(R.drawable.aerobic);
+                                        minheartrate = (int) Math.round(heartrate * 0.71);
+                                        maxheartrate = (int) Math.round(heartrate * 0.80);
+                                        result.setText(String.valueOf("Target heart rate zone = " + minheartrate + " - " + maxheartrate));
+                                        break;
+
+                                    case R.id.anaerobic:
+
+                                        img.setImageResource(R.drawable.anaerobic);
+                                        minheartrate = (int) Math.round(heartrate * 0.81);
+                                        maxheartrate = (int) Math.round(heartrate * 0.90);
+                                        result.setText(String.valueOf("Target heart rate zone = " + minheartrate + " - " + maxheartrate));
+                                        break;
+
+                                    case R.id.vo2:
+
+
+                                        img.setImageResource(R.drawable.vo2);
+                                        minheartrate = (int) Math.round(heartrate * 0.91);
+                                        maxheartrate = (int) Math.round(heartrate * 1.00);
+                                        result.setText(String.valueOf("Target heart rate zone = " + minheartrate + " - " + maxheartrate));
+                                        break;
+
+
+                                }
+                            }
+                            // Here age scale has been set 1-120 any other age will not be accepted
+                            if (Integer.parseInt(age.getText().toString()) < 1 || Integer.parseInt(age.getText().toString()) > 120) {
+
+                                Toast.makeText(MainActivitySauli.this, "Can't calculate heart rate zone outside of age 1 - 120.", Toast.LENGTH_LONG).show();
+                                result.setText("");
+                            }
+                            return true;
+                        }
+                    });
+                    popup1.show();
+                }
+            }
+        });
+    }
+}
