@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    //Creating menu and items for different type of exercise
+    <item
+        android:id="@+id/aerobic"
+        android:title="Aerobic" />
+
+    <item
+        android:id="@+id/anaerobic"
+        android:title="Anaerobic" />
+
+    <item
+        android:id="@+id/vo2"
+        android:title="VO2" />
+
+</menu>
