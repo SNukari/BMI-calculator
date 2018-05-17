@@ -1,1 +1,3 @@
 BMI-Calculator made with Androidstudio
+Calculates ideal heartrate for aerobic, anaerobic and vo2 training depending on users age.
+language: Java
